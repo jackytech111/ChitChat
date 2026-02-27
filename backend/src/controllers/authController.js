@@ -107,6 +107,18 @@ export const signIn = async (req, res) => {
 
 export const signOut = async (req, res) => {
   try {
+    // Lấy refresh token từ cookie
+    const token = req.cookies?.refreshToken;
+
+    if (token) {
+      // Xoá session tương ứng với refresh token
+      await Session.deleteOne({ refreshToken: token });
+
+      // xoá cookie refresh token
+      res.clearCookie("refreshToken");
+    }
+
+    return res.sendStatus(204);
   } catch (error) {
     console.log("Lỗi khi đăng xuất", error);
     res.status(500).json({ message: "Đã xảy ra lỗi khi đăng xuất" });
