@@ -6,6 +6,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const signUpSchema = z.object({
+  firstname: z.string().min(1, "Tên bắt buộc phải có"),
+  lastname: z.string().min(1, "Họ bắt buộc phải có"),
+  username: z.string().min(3, "Tên đăng nhập phải có ít nhất 3 ký tự"),
+  email: z.string().email("Email không hợp lệ"),
+  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+});
+
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignupForm({
   className,
@@ -13,12 +26,28 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  const onSubmit = async (data: SignUpFormValues) => {
+    // TODO: gọi backend để signup
+    console.log(data);
+  };
+
   return (
     <div className={cn("flex flex-col gap-4 w-full", className)} {...props}>
       <Card className="overflow-hidden p-0 border-border/60 shadow-soft">
         <CardContent className="grid p-0 md:grid-cols-2">
           {/* ── Left: Form ── */}
-          <form className="p-8 md:p-10 flex flex-col gap-7">
+          <form
+            className="p-8 md:p-10 flex flex-col gap-7"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {/* Logo */}
             <a href="/" className="block w-fit">
               <img src="/chitchat.svg" alt="ChitChat" className="h-8" />
@@ -40,37 +69,50 @@ export function SignupForm({
             <div className="flex flex-col gap-4">
               {/* Họ & Tên */}
               <div className="grid grid-cols-2 gap-3">
+                {/* Họ */}
                 <div className="flex flex-col gap-1.5">
                   <Label
-                    htmlFor="firstName"
+                    htmlFor="lastname"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Họ
                   </Label>
                   <Input
-                    id="firstName"
+                    id="lastname"
                     type="text"
                     placeholder="Nguyễn"
-                    autoComplete="given-name"
-                    required
+                    autoComplete="family-name"
                     className="signup-input"
+                    {...register("lastname")}
                   />
+                  {errors.lastname && (
+                    <p className="text-xs text-destructive">
+                      {errors.lastname.message}
+                    </p>
+                  )}
                 </div>
+
+                {/* Tên */}
                 <div className="flex flex-col gap-1.5">
                   <Label
-                    htmlFor="lastName"
+                    htmlFor="firstname"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Tên
                   </Label>
                   <Input
-                    id="lastName"
+                    id="firstname"
                     type="text"
                     placeholder="Văn A"
-                    autoComplete="family-name"
-                    required
+                    autoComplete="given-name"
                     className="signup-input"
+                    {...register("firstname")}
                   />
+                  {errors.firstname && (
+                    <p className="text-xs text-destructive">
+                      {errors.firstname.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -82,19 +124,19 @@ export function SignupForm({
                 >
                   Tên người dùng
                 </Label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 text-sm font-medium select-none">
-                    @
-                  </span>
-                  <Input
-                    id="username"
-                    type="text"
-                    placeholder="username"
-                    autoComplete="username"
-                    required
-                    className="signup-input pl-7!"
-                  />
-                </div>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Tên đăng nhập của bạn"
+                  autoComplete="username"
+                  className="signup-input"
+                  {...register("username")}
+                />
+                {errors.username && (
+                  <p className="text-xs text-destructive">
+                    {errors.username.message}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -110,9 +152,14 @@ export function SignupForm({
                   type="email"
                   placeholder="ban@example.com"
                   autoComplete="email"
-                  required
                   className="signup-input"
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <p className="text-xs text-destructive">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -127,10 +174,10 @@ export function SignupForm({
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Tối thiểu 8 ký tự"
+                    placeholder="Tối thiểu 6 ký tự"
                     autoComplete="new-password"
-                    required
                     className="signup-input pr-11!"
+                    {...register("password")}
                   />
                   <button
                     type="button"
@@ -139,7 +186,6 @@ export function SignupForm({
                     aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                   >
                     {showPassword ? (
-                      /* eye-off */
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -157,7 +203,6 @@ export function SignupForm({
                         <line x1="2" x2="22" y1="2" y2="22" />
                       </svg>
                     ) : (
-                      /* eye */
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -175,22 +220,28 @@ export function SignupForm({
                     )}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-xs text-destructive">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Submit */}
             <Button
               type="submit"
-              className="w-full h-11 font-semibold text-sm tracking-wide bg-gradient-chat text-white shadow-bubble hover:opacity-90 hover:shadow-glow transition-all duration-300 cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full h-11 font-semibold text-sm tracking-wide bg-gradient-chat text-white shadow-bubble hover:opacity-90 hover:shadow-glow transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Tạo tài khoản
+              {isSubmitting ? "Đang xử lý..." : "Tạo tài khoản"}
             </Button>
 
             {/* Login link */}
             <p className="text-center text-sm text-muted-foreground">
               Đã có tài khoản?{" "}
               <a
-                href="/login"
+                href="/signin"
                 className="text-primary font-semibold hover:underline underline-offset-4 transition-colors"
               >
                 Đăng nhập
@@ -200,11 +251,9 @@ export function SignupForm({
 
           {/* ── Right: Visual Panel ── */}
           <div className="relative hidden md:flex flex-col items-center justify-center overflow-hidden bg-gradient-purple">
-            {/* Decorative blobs */}
             <div className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-primary-glow/20 blur-3xl" />
 
-            {/* Floating card mock */}
             <div className="relative z-10 flex flex-col items-center gap-6 px-8 text-center">
               <div className="rounded-2xl overflow-hidden shadow-[0_24px_64px_-12px_hsl(271_79%_47%/0.35)] border border-white/10">
                 <img
@@ -222,7 +271,6 @@ export function SignupForm({
                 </p>
               </div>
 
-              {/* Fake avatars */}
               <div className="flex items-center gap-1.5">
                 {["🧑🏻", "👩🏽", "🧔🏾", "👩🏻", "🧑🏿"].map((emoji, i) => (
                   <div

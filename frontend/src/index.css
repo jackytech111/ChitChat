@@ -85,6 +85,21 @@
       hsla(262, 83%, 58%, 0.5) 100%
     );
 
+    /* Sign-in panel: trắng → đào → cam rực */
+    --gradient-orange: radial-gradient(
+      145% 145% at 65% 0%,
+      hsla(0, 0%, 100%, 1) 25%,
+      hsla(340, 90%, 78%, 0.5) 55%,
+      hsla(22, 100%, 58%, 0.6) 100%
+    );
+
+    /* Button: hồng đào → cam */
+    --gradient-btn-orange: linear-gradient(
+      135deg,
+      hsl(338, 80%, 58%),
+      hsl(22, 100%, 53%)
+    );
+
     /* Shadows */
     --shadow-soft: 0 8px 32px -8px hsl(271 79% 47% / 0.15);
     --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
@@ -169,6 +184,21 @@
       hsla(310, 96%, 11%, 0.5) 100%
     );
 
+    /* Sign-in panel dark: nền tối → đỏ hồng → cam cháy */
+    --gradient-orange: radial-gradient(
+      145% 145% at 65% 0%,
+      hsla(240, 15%, 8%, 1) 25%,
+      hsla(340, 75%, 28%, 0.65) 55%,
+      hsla(22, 90%, 32%, 0.6) 100%
+    );
+
+    /* Button dark: hồng → cam */
+    --gradient-btn-orange: linear-gradient(
+      135deg,
+      hsl(338, 75%, 55%),
+      hsl(22, 95%, 50%)
+    );
+
     --shadow-soft: 0 8px 32px -8px hsl(280 100% 70% / 0.25);
     --shadow-glow: 0 0 40px hsl(var(--primary) / 0.4);
     --shadow-bubble: 0 4px 20px -4px hsl(280 80% 50% / 0.3);
@@ -235,6 +265,12 @@
   }
   .bg-gradient-purple {
     background: var(--gradient-purple);
+  }
+  .bg-gradient-orange {
+    background: var(--gradient-orange);
+  }
+  .bg-gradient-btn-orange {
+    background: var(--gradient-btn-orange);
   }
 
   /* ── Shadow utilities ── */
@@ -309,5 +345,18 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* ────────────────────────────────────────────
+     Signin Form — input với focus ring cam
+  ─────────────────────────────────────────────*/
+  .signin-input {
+    @apply h-10 rounded-md border border-border/70 bg-muted/40 px-3 text-sm
+           text-foreground placeholder:text-muted-foreground/50
+           transition-all duration-200
+           focus-visible:outline-none focus-visible:ring-0
+           focus-visible:border-orange-400/70 focus-visible:bg-background
+           focus-visible:shadow-[0_0_0_3px_hsl(22_100%_55%/0.15)]
+           hover:border-orange-300/50;
   }
 }
