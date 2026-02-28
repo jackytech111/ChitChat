@@ -9,6 +9,8 @@ import { useState } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 const signInSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
@@ -22,6 +24,8 @@ export function SigninForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = useAuthStore();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -32,8 +36,9 @@ export function SigninForm({
   });
 
   const onSubmit = async (data: SignInFormValues) => {
-    // TODO: gọi backend để sign in
-    console.log(data);
+    const { email, password } = data;
+    await signIn(email, password);
+    navigate("/");
   };
 
   return (
@@ -207,7 +212,7 @@ export function SigninForm({
                 <p className="text-sm font-bold text-foreground/80 tracking-wide uppercase">
                   Kết nối. Trò chuyện. Vui vẻ.
                 </p>
-                <p className="text-xs text-muted-foreground max-w-[200px] leading-relaxed">
+                <p className="text-xs text-muted-foreground max-w-50 leading-relaxed">
                   Hàng triệu người dùng đang trò chuyện trên ChitChat mỗi ngày.
                 </p>
               </div>

@@ -9,6 +9,8 @@ import { useState } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 const signUpSchema = z.object({
   firstname: z.string().min(1, "Tên bắt buộc phải có"),
@@ -26,6 +28,9 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -35,8 +40,11 @@ export function SignupForm({
   });
 
   const onSubmit = async (data: SignUpFormValues) => {
-    // TODO: gọi backend để signup
-    console.log(data);
+    const { firstname, lastname, username, email, password } = data;
+
+    await signUp(username, password, email, firstname, lastname);
+
+    navigate("/signin");
   };
 
   return (
