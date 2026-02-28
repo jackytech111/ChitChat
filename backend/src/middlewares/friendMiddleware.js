@@ -9,6 +9,10 @@ export const checkFriendship = async (req, res, next) => {
     const recipientId = req.body?.recipientId ?? null;
     const memberIds = req.body?.memberIds ?? [];
 
+    if (!Array.isArray(memberIds)) {
+      memberIds = [memberIds];
+    }
+
     if (!recipientId && memberIds.length === 0) {
       return res
         .status(400)
