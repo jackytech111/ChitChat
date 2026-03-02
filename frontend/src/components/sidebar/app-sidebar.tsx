@@ -22,9 +22,11 @@ import DirectMessageList from "../chat/DirectMessageList";
 import { useAuthStore } from "@/stores/useAuthStore";
 import ConversationSkeleton from "../skeleton/ConversationSkeleton";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { useChatStore } from "@/stores/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
+  const { convoLoading } = useChatStore();
   const { isDark, toggleTheme } = useThemeStore();
 
   return (
@@ -40,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <div className="flex w-full items-center px-2 justify-between">
-                  <h1 className="text-xl font-bold text-white">Moji</h1>
+                  <h1 className="text-xl font-bold text-white">ChitChat</h1>
                   <div className="flex items-center gap-2">
                     <Sun className="size-4 text-white/80" />
                     <Switch
