@@ -2,6 +2,7 @@ import { useFriendStore } from "@/stores/useFriendStore";
 import { Card } from "../ui/card";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import { MessageCircle } from "lucide-react";
+import FriendListModal from "../createNewChat/FriendListModal";
 
 const CreateNewChat = () => {
   const { getFriends } = useFriendStore();
@@ -27,6 +28,8 @@ const CreateNewChat = () => {
               </span>
             </div>
           </DialogTrigger>
+
+          <FriendListModal />
         </Dialog>
       </Card>
     </div>
