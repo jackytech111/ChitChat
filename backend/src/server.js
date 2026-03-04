@@ -19,10 +19,30 @@ dotenv.config();
 // const app = express();
 const PORT = process.env.PORT || 5001;
 
+const allowedOrigins = process.env.CLIENT_URL.split(",").map((url) =>
+  url.replace(/\/$/, ""),
+);
+
 // middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        callback(null, true);
+      } else {
+        console.log("Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 // Configuration
 cloudinary.config({
