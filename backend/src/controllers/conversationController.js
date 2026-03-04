@@ -141,7 +141,25 @@ export const getConversations = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { conversationId } = req.params;
+    const userId = req.user._id.toString();
     const { limit = 50, cursor } = req.query;
+    const conversation = await Conversation.findById(conversationId)
+      .select("participants")
+      .lean();
+
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    const isMember = conversation.participants.some(
+      (p) => p.userId.toString() === userId,
+    );
+
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to view these messages" });
+    }
 
     const query = { conversationId };
 

@@ -13,7 +13,7 @@ import { UserPlus, Users } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import type { Friend } from "@/types/user";
-import InviteSuggestionList from "../newGroupChat/InviteSuggestionList";
+import IniviteSuggestionList from "../newGroupChat/InviteSuggestionList";
 import SelectedUsersList from "../newGroupChat/SelectedUsersList";
 import { toast } from "sonner";
 import { useChatStore } from "@/stores/useChatStore";
@@ -118,7 +118,7 @@ const NewGroupChatModal = () => {
 
             {/* danh sách gợi ý */}
             {search && filteredFriends.length > 0 && (
-              <InviteSuggestionList
+              <IniviteSuggestionList
                 filteredFriends={filteredFriends}
                 onSelect={handleSelectFriend}
               />

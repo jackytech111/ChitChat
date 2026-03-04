@@ -39,6 +39,27 @@ const ChatWindowBody = () => {
     setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
   }, [selectedConvo]);
 
+  // initial fetch when user switches into a conversation with empty local cache
+  useEffect(() => {
+    if (!activeConversationId) {
+      return;
+    }
+
+    if (allMessages[activeConversationId]) {
+      return;
+    }
+
+    const loadInitialMessages = async () => {
+      try {
+        await fetchMessages(activeConversationId);
+      } catch (error) {
+        console.error("Lỗi xảy ra khi fetch initial messages", error);
+      }
+    };
+
+    loadInitialMessages();
+  }, [activeConversationId, allMessages, fetchMessages]);
+
   // kéo xuống dưới khi load convo
   useLayoutEffect(() => {
     if (!messagesEndRef.current) return;

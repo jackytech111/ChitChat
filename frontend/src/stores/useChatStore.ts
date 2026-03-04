@@ -1,9 +1,12 @@
 import { chatService } from "@/services/chatService";
 import type { ChatState } from "@/types/store";
+import type { Conversation } from "@/types/chat";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuthStore } from "./useAuthStore";
 import { useSocketStore } from "./useSocketStore";
+
+type ConversationPatch = Partial<Conversation> & { _id: string };
 
 export const useChatStore = create<ChatState>()(
   persist(
@@ -141,8 +144,9 @@ export const useChatStore = create<ChatState>()(
                 ...state.messages,
                 [convoId]: {
                   items: [...prevItems, message],
-                  hasMore: state.messages[convoId].hasMore,
-                  nextCursor: state.messages[convoId].nextCursor ?? undefined,
+                  hasMore: state.messages[convoId]?.hasMore ?? false,
+                  nextCursor:
+                    state.messages[convoId]?.nextCursor ?? undefined,
                 },
               },
             };
@@ -151,12 +155,39 @@ export const useChatStore = create<ChatState>()(
           console.error("Lỗi xảy khi ra add message:", error);
         }
       },
-      updateConversation: (conversation) => {
+      updateConversation: (conversation: ConversationPatch) => {
         set((state) => ({
           conversations: state.conversations.map((c) =>
             c._id === conversation._id ? { ...c, ...conversation } : c,
           ),
         }));
+      },
+      upsertConversation: (conversation: ConversationPatch) => {
+        set((state) => {
+          const exists = state.conversations.some(
+            (c) => c._id === conversation._id,
+          );
+
+          if (exists) {
+            return {
+              conversations: state.conversations.map((c) =>
+                c._id === conversation._id ? { ...c, ...conversation } : c,
+              ),
+            };
+          }
+
+          const canInsert =
+            typeof conversation.type === "string" &&
+            Array.isArray(conversation.participants);
+
+          if (!canInsert) {
+            return state;
+          }
+
+          return {
+            conversations: [conversation as Conversation, ...state.conversations],
+          };
+        });
       },
       markAsSeen: async () => {
         try {
@@ -198,17 +229,24 @@ export const useChatStore = create<ChatState>()(
           console.error("Lỗi xảy ra khi gọi markAsSeen trong store", error);
         }
       },
-      addConvo: (convo) => {
+      addConvo: (convo, options) => {
+        const activate = options?.activate ?? true;
+
         set((state) => {
           const exists = state.conversations.some(
             (c) => c._id.toString() === convo._id.toString(),
           );
+          const conversations = exists
+            ? state.conversations.map((c) =>
+                c._id.toString() === convo._id.toString() ? { ...c, ...convo } : c,
+              )
+            : [convo, ...state.conversations];
 
           return {
-            conversations: exists
-              ? state.conversations
-              : [convo, ...state.conversations],
-            activeConversationId: convo._id,
+            conversations,
+            activeConversationId: activate
+              ? convo._id
+              : state.activeConversationId,
           };
         });
       },
@@ -221,7 +259,7 @@ export const useChatStore = create<ChatState>()(
             memberIds,
           );
 
-          get().addConvo(conversation);
+          get().addConvo(conversation, { activate: true });
 
           useSocketStore
             .getState()

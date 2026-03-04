@@ -32,33 +32,45 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     // new message
-    socket.on("new-message", ({ message, conversation, unreadCounts }) => {
-      useChatStore.getState().addMessage(message);
+    socket.on("new-message", async ({ message, conversation, unreadCounts }) => {
+      try {
+        const chatStore = useChatStore.getState();
+        const isKnownConversation = chatStore.conversations.some(
+          (c) => c._id === conversation._id,
+        );
 
-      const lastMessage = {
-        _id: conversation.lastMessage._id,
-        content: conversation.lastMessage.content,
-        createdAt: conversation.lastMessage.createdAt,
-        sender: {
-          _id: conversation.lastMessage.senderId,
-          displayName: "",
-          avatarUrl: null,
-        },
-      };
+        if (!isKnownConversation) {
+          await chatStore.fetchConversations();
+        }
 
-      const updatedConversation = {
-        ...conversation,
-        lastMessage,
-        unreadCounts,
-      };
+        const lastMessage = {
+          _id: conversation.lastMessage._id,
+          content: conversation.lastMessage.content,
+          createdAt: conversation.lastMessage.createdAt,
+          sender: {
+            _id: conversation.lastMessage.senderId,
+            displayName: "",
+            avatarUrl: null,
+          },
+        };
 
-      if (
-        useChatStore.getState().activeConversationId === message.conversationId
-      ) {
-        useChatStore.getState().markAsSeen();
+        const updatedConversation = {
+          ...conversation,
+          lastMessage,
+          unreadCounts,
+        };
+
+        useChatStore.getState().upsertConversation(updatedConversation);
+        useChatStore.getState().addMessage(message);
+
+        if (
+          useChatStore.getState().activeConversationId === message.conversationId
+        ) {
+          useChatStore.getState().markAsSeen();
+        }
+      } catch (error) {
+        console.error("Socket new-message handler failed", error);
       }
-
-      useChatStore.getState().updateConversation(updatedConversation);
     });
 
     // read message
@@ -71,12 +83,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         seenBy: conversation.seenBy,
       };
 
-      useChatStore.getState().updateConversation(updated);
+      useChatStore.getState().upsertConversation(updated);
     });
 
     // new group chat
     socket.on("new-group", (conversation) => {
-      useChatStore.getState().addConvo(conversation);
+      useChatStore.getState().addConvo(conversation, { activate: false });
       socket.emit("join-conversation", conversation._id);
     });
   },
