@@ -9,6 +9,10 @@ interface EmojiPickerProps {
   onChange: (value: string) => void;
 }
 
+interface EmojiSelectPayload {
+  native: string;
+}
+
 const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
   const { isDark } = useThemeStore();
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -21,11 +25,13 @@ const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
 
       const picker = new Picker({
         theme: isDark ? "dark" : "light",
-        onEmojiSelect: (emoji: any) => onChange(emoji.native),
+        onEmojiSelect: (emoji: EmojiSelectPayload) => onChange(emoji.native),
         emojiSize: 24,
       });
 
-      pickerRef.current.appendChild(picker);
+      if (picker instanceof Node) {
+        pickerRef.current.appendChild(picker);
+      }
     }
   }, [isDark, onChange]);
 
