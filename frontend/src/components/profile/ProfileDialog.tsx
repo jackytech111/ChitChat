@@ -1,5 +1,11 @@
 import type { Dispatch, SetStateAction } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import ProfileCard from "./ProfileCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
@@ -24,6 +30,9 @@ const ProfileDialog = ({ open, setOpen }: ProfileDialogProps) => {
               <DialogTitle className="text-2xl font-bold text-foreground">
                 Profile & Settings
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Xem và chỉnh sửa thông tin cá nhân, tùy chọn và cài đặt bảo mật.
+              </DialogDescription>
             </DialogHeader>
 
             <ProfileCard user={user} />

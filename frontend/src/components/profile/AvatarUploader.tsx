@@ -2,6 +2,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import { useRef } from "react";
 import { Button } from "../ui/button";
 import { Camera } from "lucide-react";
+import { toast } from "sonner";
 
 const AvatarUploader = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -17,11 +18,25 @@ const AvatarUploader = () => {
       return;
     }
 
+    if (!file.type.startsWith("image/")) {
+      toast.warning("Vui lòng chọn tệp ảnh hợp lệ");
+      e.target.value = "";
+      return;
+    }
+
+    const maxFileSize = 10 * 1024 * 1024;
+    if (file.size > maxFileSize) {
+      toast.warning("Kích thước ảnh tối đa là 10MB");
+      e.target.value = "";
+      return;
+    }
+
     const formData = new FormData();
 
     formData.append("file", file);
 
     await updateAvatarUrl(formData);
+    e.target.value = "";
   };
 
   return (
@@ -35,7 +50,13 @@ const AvatarUploader = () => {
         <Camera className="size-4" />
       </Button>
 
-      <input type="file" hidden ref={fileInputRef} onChange={handleUpload} />
+      <input
+        type="file"
+        hidden
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleUpload}
+      />
     </>
   );
 };

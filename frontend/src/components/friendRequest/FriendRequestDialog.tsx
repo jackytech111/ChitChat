@@ -2,6 +2,7 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -20,6 +21,10 @@ const FriendRequestDialog = ({ open, setOpen }: FriendRequestDialogProps) => {
   const { getAllFriendRequests } = useFriendStore();
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     const loadRequest = async () => {
       try {
         await getAllFriendRequests();
@@ -29,13 +34,16 @@ const FriendRequestDialog = ({ open, setOpen }: FriendRequestDialogProps) => {
     };
 
     loadRequest();
-  }, []);
+  }, [getAllFriendRequests, open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Lời mời kết bạn</DialogTitle>
+          <DialogDescription className="sr-only">
+            Quản lý lời mời kết bạn đã nhận và đã gửi.
+          </DialogDescription>
         </DialogHeader>
         <Tabs value={tab} onValueChange={setTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
