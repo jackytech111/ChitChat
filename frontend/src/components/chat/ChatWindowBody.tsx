@@ -1,7 +1,7 @@
 import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const ChatWindowBody = () => {
@@ -11,9 +11,6 @@ const ChatWindowBody = () => {
     messages: allMessages,
     fetchMessages,
   } = useChatStore();
-  const [lastMessageStatus, setLastMessageStatus] = useState<
-    "delivered" | "seen"
-  >("delivered");
 
   const messages = allMessages[activeConversationId!]?.items ?? [];
   const reversedMessages = [...messages].reverse();
@@ -21,23 +18,15 @@ const ChatWindowBody = () => {
   const selectedConvo = conversations.find(
     (c) => c._id === activeConversationId,
   );
+  const lastMessageStatus =
+    selectedConvo?.seenBy.length && selectedConvo.seenBy.length > 0
+      ? "Đã xem"
+      : "Đã gửi";
   const key = `chat-scroll-${activeConversationId}`;
 
   // ref
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // seen status
-  useEffect(() => {
-    const lastMessage = selectedConvo?.lastMessage;
-    if (!lastMessage) {
-      return;
-    }
-
-    const seenBy = selectedConvo?.seenBy ?? [];
-
-    setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
-  }, [selectedConvo]);
 
   // initial fetch when user switches into a conversation with empty local cache
   useEffect(() => {
@@ -109,7 +98,7 @@ const ChatWindowBody = () => {
         container.scrollTop = scrollTop;
       });
     }
-  }, [messages.length]);
+  }, [key, messages.length]);
 
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;
@@ -162,3 +151,4 @@ const ChatWindowBody = () => {
 };
 
 export default ChatWindowBody;
+

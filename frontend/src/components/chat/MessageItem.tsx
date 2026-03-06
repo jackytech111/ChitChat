@@ -9,7 +9,7 @@ interface MessageItemProps {
   index: number;
   messages: Message[];
   selectedConvo: Conversation;
-  lastMessageStatus: "delivered" | "seen";
+  lastMessageStatus: "Đã gửi" | "Đã xem";
 }
 
 const MessageItem = ({
@@ -81,13 +81,13 @@ const MessageItem = ({
             </p>
           </Card>
 
-          {/* seen/ delivered */}
+          {/* trạng thái tin cuối */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
             <Badge
               variant="outline"
               className={cn(
                 "text-xs px-1.5 py-0.5 h-4 border-0",
-                lastMessageStatus === "seen"
+                lastMessageStatus === "Đã xem"
                   ? "bg-primary/20 text-primary"
                   : "bg-muted text-muted-foreground",
               )}
