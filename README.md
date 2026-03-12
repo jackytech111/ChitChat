@@ -233,8 +233,11 @@ Some features planned for future development:
 ### Login Page
 ![Login Page](./frontend/src/assets/images/screenshots/SignInPage.png)
   
-* Chat interface
-* Friend list
+### Signin Page
+![SignIn Page](./frontend/src/assets/images/screenshots/ChatPage.png)
+  
+### Chat Page
+![Chat Page](./frontend/src/assets/images/screenshots/ChatPage.png)
 
 ---
 
