@@ -6,7 +6,6 @@
 
 @layer base {
   :root {
-    /* Base colors - soft pastels */
     --background: 0 0% 100%;
     --foreground: 217.2 32.6% 17.5%;
 
@@ -16,30 +15,24 @@
     --popover: 250 100% 99%;
     --popover-foreground: 240 15% 15%;
 
-    /* Primary - Tím */
     --primary: 271 79% 47%;
     --primary-foreground: 210 40% 96.1%;
-    /* Hồng */
     --primary-glow: 320 100% 70%;
 
-    /* Secondary - lavender */
     --secondary: 270 50% 92%;
     --secondary-foreground: 280 100% 40%;
 
     --muted: 260 30% 95%;
     --muted-foreground: 240 15% 50%;
 
-    /* Accent - cyan */
     --accent: 180 100% 75%;
     --accent-foreground: 240 100% 15%;
 
-    /* Chat colors */
     --chat-bubble-sent: 271 79% 47%;
     --chat-bubble-sent-foreground: 0 0% 100%;
     --chat-bubble-received: 0 0% 96%;
     --chat-bubble-received-foreground: 240 15% 15%;
 
-    /* Status colors */
     --online: 140 100% 50%;
     --offline: 0 0% 70%;
 
@@ -58,7 +51,6 @@
 
     --radius: 1rem;
 
-    /* Gradients */
     --gradient-primary: linear-gradient(
       135deg,
       hsl(var(--primary)),
@@ -85,7 +77,6 @@
       hsla(262, 83%, 58%, 0.5) 100%
     );
 
-    /* Sign-in panel: trắng → đào → cam rực */
     --gradient-orange: radial-gradient(
       145% 145% at 65% 0%,
       hsla(0, 0%, 100%, 1) 25%,
@@ -93,19 +84,16 @@
       hsla(22, 100%, 58%, 0.6) 100%
     );
 
-    /* Button: hồng đào → cam */
     --gradient-btn-orange: linear-gradient(
       135deg,
       hsl(338, 80%, 58%),
       hsl(22, 100%, 53%)
     );
 
-    /* Shadows */
     --shadow-soft: 0 8px 32px -8px hsl(271 79% 47% / 0.15);
     --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
     --shadow-bubble: 0 4px 20px -4px hsl(280 50% 70% / 0.2);
 
-    /* Sidebar */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 215.3 25% 26.7%;
     --sidebar-primary: 240 5.9% 10%;
@@ -184,7 +172,6 @@
       hsla(310, 96%, 11%, 0.5) 100%
     );
 
-    /* Sign-in panel dark: nền tối → đỏ hồng → cam cháy */
     --gradient-orange: radial-gradient(
       145% 145% at 65% 0%,
       hsla(240, 15%, 8%, 1) 25%,
@@ -192,7 +179,6 @@
       hsla(22, 90%, 32%, 0.6) 100%
     );
 
-    /* Button dark: hồng → cam */
     --gradient-btn-orange: linear-gradient(
       135deg,
       hsl(338, 75%, 55%),

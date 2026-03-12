@@ -74,7 +74,7 @@ const NewGroupChatModal = () => {
         <Button
           variant="ghost"
           onClick={handleGetFriends}
-          className="flex z-10 justify-center items-center size-5 rounded-full hover:bg-sidebar-accent transition cursor-pointer"
+          className="flex z-10 justify-center items-center size-5 rounded-full hover:bg-gradient-btn-orange  transition cursor-pointer"
         >
           <Users className="size-4" />
           <span className="sr-only">Tạo nhóm</span>
