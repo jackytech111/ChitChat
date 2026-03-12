@@ -230,10 +230,8 @@ Some features planned for future development:
 
 ## Screenshots
 
-
-* Login page
-  
-  ![Chat UI](./frontend/assets/images/screenshots/SignInPage.png)
+### Login Page
+![Login Page](./frontend/src/assets/images/screenshots/SignInPage.png)
   
 * Chat interface
 * Friend list
