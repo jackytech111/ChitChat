@@ -230,9 +230,6 @@ Some features planned for future development:
 
 ## Screenshots
 
-(Add screenshots of the UI here)
-
-Examples:
 
 * Login page
 * Chat interface
