@@ -233,8 +233,8 @@ Some features planned for future development:
 ### Login Page
 ![Login Page](./frontend/src/assets/images/screenshots/SignInPage.png)
   
-### Signin Page
-![SignIn Page](./frontend/src/assets/images/screenshots/ChatPage.png)
+### Signup Page
+![SignUo Page](./frontend/src/assets/images/screenshots/SignUpPage.png)
   
 ### Chat Page
 ![Chat Page](./frontend/src/assets/images/screenshots/ChatPage.png)
