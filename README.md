@@ -232,6 +232,9 @@ Some features planned for future development:
 
 
 * Login page
+  ```
+  ![Chat UI](./frontend/assets/images/screenshots/SignInPage.png)
+  ```
 * Chat interface
 * Friend list
 
